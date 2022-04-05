@@ -109,7 +109,7 @@ pipeline
          {
              script
              {
-              sh "sudo docker build . -t ${REPOSITORY_URI}:mavenwebapp-${COMMIT}"
+              sh "docker build . -t ${REPOSITORY_URI}:mavenwebapp-${COMMIT}"
              }
          }
      }
@@ -117,10 +117,10 @@ pipeline
      {
          steps
          {
-             script
-             {
-                 sh "sudo docker push ${REPOSITORY_URI}:mavenwebapp-${COMMIT}"
-             }
+            script
+            {
+                sh "docker push ${REPOSITORY_URI}:mavenwebapp-${COMMIT}"
+            }
          }
 
      }
