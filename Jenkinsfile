@@ -123,14 +123,20 @@ pipeline
          }
 
      }
-     stage('Docker Deploy')
-     {
-         steps{
-             script{
-                 sh "sudo docker run -rm -p 8082:8080 ${REPOSITORY_URI}:mavenwebapp-${COMMIT}"
-             }
+     // Stopping Docker containers for cleaner Docker run
+     stage('stop previous containers') {
+         steps {
+            sh 'docker ps -f name=myjavaContainer -q | xargs --no-run-if-empty docker container stop'
+            sh 'docker container ls -a -fname=myjavaContainer -q | xargs -r docker container rm'
          }
-     }
+       }
+
+    stage('Docker Run') {
+     steps{
+         script {
+                sh "docker run -d -p 8082:8080 --rm --name myjavaContainer ${REPOSITORY_URI}:mavenwebapp-${COMMIT}"
+            }
+      }
     //  stage('Update image in K8s manifest file')
     //  {
     //      steps
