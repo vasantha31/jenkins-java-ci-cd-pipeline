@@ -85,7 +85,7 @@ pipeline
                          groupId: "${readPom.groupId}", 
                          nexusUrl: '3.110.168.246:8081', 
                          nexusVersion: 'nexus3', 
-                         protocol: 'http', 
+                        //  protocol: 'http', 
                          repository: "${nexusrepo}", 
                          version: "${readPom.version}"
 
