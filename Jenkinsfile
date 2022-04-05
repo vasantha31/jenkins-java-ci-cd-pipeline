@@ -30,7 +30,7 @@ pipeline
          {
              script
              {
-                 checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/vasantha31/JAVA-CI-CD-PIPELINE.git']]])
+                 checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/vasantha31/jenkins-java-ci-cd-pipeline.git']]])
                  COMMIT = sh (script: "git rev-parse --short=10 HEAD", returnStdout: true).trim()  
             }
              
@@ -127,7 +127,7 @@ pipeline
      {
          steps{
              script{
-                 sh "sudo docker run -rm -p 8082:8080 ${REPOSITORY_URI}:mavenwebapp-${COMMIT} "
+                 sh "sudo docker run -rm -p 8082:8080 ${REPOSITORY_URI}:mavenwebapp-${COMMIT}"
              }
          }
      }
