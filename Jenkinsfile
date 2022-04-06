@@ -40,9 +40,9 @@ pipeline
      }
      stage('Build')
      {   
-         when {
-            buildingTag()
-         }
+        //  when {
+        //     buildingTag()
+        //  }
          steps
          {
              sh "mvn clean package"
