@@ -1,4 +1,3 @@
-//Test
 def COMMIT
 def BRANCH_NAME
 def GIT_BRANCH
@@ -40,9 +39,9 @@ pipeline
      }
      stage('Build')
      {   
-         when {
-            buildingTag()
-         }
+        //  when {
+        //     buildingTag()
+        //  }
          steps
          {
              sh "mvn clean package"
