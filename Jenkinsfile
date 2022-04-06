@@ -33,12 +33,16 @@ pipeline
              {
                  checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/vasantha31/jenkins-java-ci-cd-pipeline.git']]])
                  COMMIT = sh (script: "git rev-parse --short=10 HEAD", returnStdout: true).trim()  
+                 COMMIT_TAG = sh (script: "git tag --contains | head -1", returnStdout: true).trim() 
             }
              
          }
      }
      stage('Build')
-     {
+     {   
+         when {
+            buildingTag()
+         }
          steps
          {
              sh "mvn clean package"
