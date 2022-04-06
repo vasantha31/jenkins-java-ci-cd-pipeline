@@ -43,26 +43,26 @@ pipeline
              sh "mvn clean package"
          }
      }
-     stage('Execute Sonarqube Report')
-     {
-         steps
-         {
-            withSonarQubeEnv('sonar') 
-             {
-                sh "mvn sonar:sonar"
-             }  
-         }
-     }
-     stage('Quality Gate Check')
-     {
-         steps
-         {
-             timeout(time: 1, unit: 'HOURS') 
-             {
-                waitForQualityGate abortPipeline: true
-            }
-         }
-     }
+    //  stage('Execute Sonarqube Report')
+    //  {
+    //      steps
+    //      {
+    //         withSonarQubeEnv('sonar') 
+    //          {
+    //             sh "mvn sonar:sonar"
+    //          }  
+    //      }
+    //  }
+    //  stage('Quality Gate Check')
+    //  {
+    //      steps
+    //      {
+    //          timeout(time: 1, unit: 'HOURS') 
+    //          {
+    //             waitForQualityGate abortPipeline: true
+    //         }
+    //      }
+    //  }
      
      stage('Nexus Upload')
      {
