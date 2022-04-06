@@ -1,4 +1,5 @@
 //Test1
+//Test2
 def COMMIT
 def BRANCH_NAME
 def GIT_BRANCH
