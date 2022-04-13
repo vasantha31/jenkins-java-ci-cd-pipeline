@@ -89,7 +89,7 @@ pipeline
                 ], 
                          credentialsId: 'Nexus-Cred', 
                          groupId: "${readPom.groupId}", 
-                         nexusUrl: '65.0.122.192:8081', 
+                         nexusUrl: '3.110.88.104:8081', 
                          nexusVersion: 'nexus3', 
                          protocol: 'http', 
                          repository: "${nexusrepo}", 
