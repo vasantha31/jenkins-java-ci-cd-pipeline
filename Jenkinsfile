@@ -8,7 +8,7 @@ pipeline
  agent any
  environment
  {
-     AWS_ACCOUNT_ID="044018232007"             
+     AWS_ACCOUNT_ID="470022230688"             
      AWS_DEFAULT_REGION="ap-south-1" 
      IMAGE_REPO_NAME="jenkins-java"
      REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}"
@@ -49,65 +49,65 @@ pipeline
              sh "mvn clean package"
          }
      }
-     stage('Execute Sonarqube Report')
-     {
-         steps
-         {
-            withSonarQubeEnv('sonar') 
-             {
-                sh "mvn sonar:sonar"
-             }  
-         }
-     }
-     stage('Quality Gate Check')
-     {
-         steps
-         {
-             timeout(time: 1, unit: 'HOURS') 
-             {
-                waitForQualityGate abortPipeline: true
-            }
-         }
-     }
+    //  stage('Execute Sonarqube Report')
+    //  {
+    //      steps
+    //      {
+    //         withSonarQubeEnv('sonar') 
+    //          {
+    //             sh "mvn sonar:sonar"
+    //          }  
+    //      }
+    //  }
+    //  stage('Quality Gate Check')
+    //  {
+    //      steps
+    //      {
+    //          timeout(time: 1, unit: 'HOURS') 
+    //          {
+    //             waitForQualityGate abortPipeline: true
+    //         }
+    //      }
+    //  }
      
-     stage('Nexus Upload')
-     {
-         steps
-         {
-            script
-            {
-                 def readPom = readMavenPom file: 'pom.xml'
-                 def nexusrepo = readPom.version.endsWith("SNAPSHOT") ? "maven-snapshots" : "maven-releases"
-                 nexusArtifactUploader artifacts: 
-                 [
-                     [
-                         artifactId: "${readPom.artifactId}",
-                         classifier: '', 
-                         file: "target/${readPom.artifactId}-${readPom.version}.war", 
-                         type: 'war'
-                     ]
-                ], 
-                         credentialsId: 'Nexus-Cred', 
-                         groupId: "${readPom.groupId}", 
-                         nexusUrl: '3.110.88.104:8081', 
-                         nexusVersion: 'nexus3', 
-                         protocol: 'http', 
-                         repository: "${nexusrepo}", 
-                         version: "${readPom.version}"
+    //  stage('Nexus Upload')
+    //  {
+    //      steps
+    //      {
+    //         script
+    //         {
+    //              def readPom = readMavenPom file: 'pom.xml'
+    //              def nexusrepo = readPom.version.endsWith("SNAPSHOT") ? "maven-snapshots" : "maven-releases"
+    //              nexusArtifactUploader artifacts: 
+    //              [
+    //                  [
+    //                      artifactId: "${readPom.artifactId}",
+    //                      classifier: '', 
+    //                      file: "target/${readPom.artifactId}-${readPom.version}.war", 
+    //                      type: 'war'
+    //                  ]
+    //             ], 
+    //                      credentialsId: 'Nexus-Cred', 
+    //                      groupId: "${readPom.groupId}", 
+    //                      nexusUrl: '3.110.88.104:8081', 
+    //                      nexusVersion: 'nexus3', 
+    //                      protocol: 'http', 
+    //                      repository: "${nexusrepo}", 
+    //                      version: "${readPom.version}"
 
-            }
-         }
-     }
-     stage('Login to AWS ECR')
-     {
-         steps
-         {
-             script
-             {
-                sh "whoami && pwd && /usr/local/bin/aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
-             }
-         }
-     }
+    //         }
+    //      }
+    //  }
+    //  stage('Login to AWS ECR')
+    //  {
+    //      steps
+    //      {
+    //          script
+    //          {
+    //             sh "whoami && pwd && /usr/local/bin/aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
+    //          }
+    //      }
+    //  }
      stage('Building Docker Image')
      {
          steps
@@ -118,7 +118,7 @@ pipeline
              }
          }
      }
-     stage('Pushing Docker image into ECR')
+     stage('Pushing Docker image into dockerhub')
      {
          steps
          {
