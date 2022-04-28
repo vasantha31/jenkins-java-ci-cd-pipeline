@@ -143,7 +143,7 @@ pipeline
     stage('Docker Run') {
      steps{
          script {
-                sh "docker run -d -p 8082:8080 --rm --name myjavaContainer ${REPOSITORY_URI}:mavenwebapp-${COMMIT}"
+                sh "docker run -d -p 8082:8080 --rm --name myjavaContainer sample:latest"
             }
       }
     } 
