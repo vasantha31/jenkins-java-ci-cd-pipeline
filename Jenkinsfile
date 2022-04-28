@@ -142,7 +142,7 @@ pipeline
     stage('Docker Run') {
      steps{
          script {
-                sh "docker run -d -p 8082:8080 --rm --name mycontainer sample:latest"
+                sh "docker run -d -p 8083:8080 --rm --name mycontainer sample:latest"
             }
       }
     } 
