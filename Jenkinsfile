@@ -105,7 +105,7 @@ pipeline
 
                   sh 'docker build -t sample:latest .'
 
-                //   sh 'docker tag  sample_login_app vasanthad/sample:latest'
+                  sh 'docker tag  sample_login_app vasanthad/sample:latest'
 
                     }
 
