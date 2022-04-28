@@ -11,7 +11,7 @@ pipeline
      AWS_DEFAULT_REGION="ap-south-1" 
      IMAGE_REPO_NAME="jenkins-java"
      REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}"
-     
+     DOCKERHUB_CREDENTIALS=credentials('docker')
  }
  tools
  {
@@ -48,86 +48,89 @@ pipeline
              sh "mvn clean package"
          }
      }
-     stage('Execute Sonarqube Report')
-     {
-         steps
-         {
-            withSonarQubeEnv('sonar') 
-             {
-                sh "mvn sonar:sonar"
-             }  
-         }
-     }
-     stage('Quality Gate Check')
-     {
-         steps
-         {
-             timeout(time: 1, unit: 'HOURS') 
-             {
-                waitForQualityGate abortPipeline: true
-            }
-         }
-     }
+    //  stage('Execute Sonarqube Report')
+    //  {
+    //      steps
+    //      {
+    //         withSonarQubeEnv('sonar') 
+    //          {
+    //             sh "mvn sonar:sonar"
+    //          }  
+    //      }
+    //  }
+    //  stage('Quality Gate Check')
+    //  {
+    //      steps
+    //      {
+    //          timeout(time: 1, unit: 'HOURS') 
+    //          {
+    //             waitForQualityGate abortPipeline: true
+    //         }
+    //      }
+    //  }
      
-     stage('Nexus Upload')
-     {
-         steps
-         {
-            script
-            {
-                 def readPom = readMavenPom file: 'pom.xml'
-                 def nexusrepo = readPom.version.endsWith("SNAPSHOT") ? "maven-snapshots" : "maven-releases"
-                 nexusArtifactUploader artifacts: 
-                 [
-                     [
-                         artifactId: "${readPom.artifactId}",
-                         classifier: '', 
-                         file: "target/${readPom.artifactId}-${readPom.version}.war", 
-                         type: 'war'
-                     ]
-                ], 
-                         credentialsId: 'Nexus-Cred', 
-                         groupId: "${readPom.groupId}", 
-                         nexusUrl: '3.111.29.181:8081', 
-                         nexusVersion: 'nexus3', 
-                         protocol: 'http', 
-                         repository: "${nexusrepo}", 
-                         version: "${readPom.version}"
+    //  stage('Nexus Upload')
+    //  {
+    //      steps
+    //      {
+    //         script
+    //         {
+    //              def readPom = readMavenPom file: 'pom.xml'
+    //              def nexusrepo = readPom.version.endsWith("SNAPSHOT") ? "maven-snapshots" : "maven-releases"
+    //              nexusArtifactUploader artifacts: 
+    //              [
+    //                  [
+    //                      artifactId: "${readPom.artifactId}",
+    //                      classifier: '', 
+    //                      file: "target/${readPom.artifactId}-${readPom.version}.war", 
+    //                      type: 'war'
+    //                  ]
+    //             ], 
+    //                      credentialsId: 'Nexus-Cred', 
+    //                      groupId: "${readPom.groupId}", 
+    //                      nexusUrl: '3.111.29.181:8081', 
+    //                      nexusVersion: 'nexus3', 
+    //                      protocol: 'http', 
+    //                      repository: "${nexusrepo}", 
+    //                      version: "${readPom.version}"
 
-            }
-         }
-     }
-     stage('Login to AWS ECR')
-     {
-         steps
-         {
-             script
-             {
-                sh "whoami && pwd && /usr/local/bin/aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
-             }
-         }
-     }
-     stage('Building Docker Image')
-     {
-         steps
-         {
-             script
-             {
-              sh "docker build . -t ${REPOSITORY_URI}:mavenwebapp-${COMMIT}"
-             }
-         }
-     }
-     stage('Pushing Docker image into ECR')
-     {
-         steps
-         {
-            script
-            {
-                sh "docker push ${REPOSITORY_URI}:mavenwebapp-${COMMIT}"
-            }
-         }
+    //         }
+    //      }
+    //  }
+      stage('Docker Build and Tag') {
 
-     }
+              steps {
+
+                  sh 'docker build -t sample:latest .'
+
+                  sh 'docker tag  sample vasanthad/sample:latest'
+
+                    }
+
+              }
+
+         stage('Login') {
+
+              steps {
+
+            sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+
+                }
+
+              }
+
+          stage('Push') {
+
+                 steps {
+
+                  sh 'docker push  vasanthad/sample:latest'
+
+
+
+                 }
+
+           }
+
      // Stopping Docker containers for cleaner Docker run
      stage('stop previous containers') {
          steps {
@@ -139,7 +142,7 @@ pipeline
     stage('Docker Run') {
      steps{
          script {
-                sh "docker run -d -p 8082:8080 --rm --name myjavaContainer ${REPOSITORY_URI}:mavenwebapp-${COMMIT}"
+                sh "docker run -d -p 8082:8080 --rm --name myjavaContainer sample:latest"
             }
       }
     } 
