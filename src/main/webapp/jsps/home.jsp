@@ -9,7 +9,7 @@
 </head>
 <body>
 <h1 align="center">Welcome to My CI/CD project</h1>
-<h1 align="center">Triggered by webhook when there is a change in code and jenkins pull the  build it , executes sonarqube report , upload artifact to nexus , create docker image , push docker image to ECR private regstry and deploy it to docker running on ec2 instance welcome to minfy tech </h1>
+<h1 align="center">welcome to Minfy </h1>
 <hr>
 <div style="text-align: center;">
 	
