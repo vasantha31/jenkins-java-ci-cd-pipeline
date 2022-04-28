@@ -12,7 +12,7 @@ pipeline
      AWS_DEFAULT_REGION="ap-south-1" 
      IMAGE_REPO_NAME="jenkins-java"
      REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}"
-     
+     DOCKERHUB_CREDENTIALS=credentials('docker')
  }
  tools
  {
@@ -98,37 +98,40 @@ pipeline
     //         }
     //      }
     //  }
-    //  stage('Login to AWS ECR')
-    //  {
-    //      steps
-    //      {
-    //          script
-    //          {
-    //             sh "whoami && pwd && /usr/local/bin/aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
-    //          }
-    //      }
-    //  }
-     stage('Building Docker Image')
-     {
-         steps
-         {
-             script
-             {
-              sh "docker build . -t ${REPOSITORY_URI}:mavenwebapp-${COMMIT}"
-             }
-         }
-     }
-     stage('Pushing Docker image into dockerhub')
-     {
-         steps
-         {
-            script
-            {
-                sh "docker push ${REPOSITORY_URI}:mavenwebapp-${COMMIT}"
-            }
-         }
+    
+     stage('Docker Build and Tag') {
 
-     }
+              steps {
+
+                  sh 'docker build -t sample:latest .'
+
+                //   sh 'docker tag  sample_login_app vasanthad/sample:latest'
+
+                    }
+
+              }
+
+         stage('Login') {
+
+              steps {
+
+            sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+
+                }
+
+              }
+
+          stage('Push') {
+
+                 steps {
+
+                  sh 'docker push  vasanthad/sample:latest'
+
+
+
+                 }
+
+           }
      // Stopping Docker containers for cleaner Docker run
      stage('stop previous containers') {
          steps {
