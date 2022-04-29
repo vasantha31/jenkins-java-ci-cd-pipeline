@@ -52,9 +52,9 @@ pipeline
      {
          steps
          {
-            withSonarQubeEnv('sonar') 
+            withSonarQubeEnv('Sonarqube') 
              {
-                sh "mvn sonar:sonar"
+                sh "mvn Sonarqube:Sonarqube"
              }  
          }
      }
