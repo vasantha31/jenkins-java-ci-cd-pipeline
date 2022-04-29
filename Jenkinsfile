@@ -134,15 +134,15 @@ pipeline
      // Stopping Docker containers for cleaner Docker run
      stage('stop previous containers') {
          steps {
-            sh 'docker ps -f name=myContainer2 -q | xargs --no-run-if-empty docker container stop'
-            sh 'docker container ls -a -fname=myContainer2 -q | xargs -r docker container rm'
+            sh 'docker ps -f name=myjava -q | xargs --no-run-if-empty docker container stop'
+            sh 'docker container ls -a -fname=myjava -q | xargs -r docker container rm'
          }
        }
 
     stage('Docker Run') {
      steps{
          script {
-                sh "docker run -d -p 8084:8080 --rm --name mycontainer2 sample:latest"
+                sh "docker run -d -p 8084:8080 --rm --name myjava sample:latest"
             }
       }
     } 
