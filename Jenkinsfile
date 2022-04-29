@@ -54,7 +54,7 @@ pipeline
          {
             withSonarQubeEnv('sonarqube') 
              {
-                sh "mvn sonarqube:sonarqube"
+                sh "mvn sonar:sonarqube"
              }  
          }
      }
